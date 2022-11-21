@@ -9,8 +9,11 @@ from typing import (
 import rich
 from rich.segment import Segment
 from rich.console import Console
+import rich.console
 
 rich.console._is_jupyter = lambda : True
+rich.console.JUPYTER_DEFAULT_COLUMNS = 80
+rich.console.JUPYTER_DEFAULT_LINES = 40
 
 def display_pyscript(segments: Iterable[Segment], text: str) -> None:
     """Allow output of raw HTML within pyscript/pyodide"""
@@ -29,13 +32,10 @@ rich.jupyter.display = display_pyscript
 from .app import (
     App,
     CSSPathType,
-    AutopilotCallbackType,
-    _ASYNCIO_GET_EVENT_LOOP_IS_DEPRECATED,
     ReturnType
 )
-from .driver import Driver
+
 from .drivers.pyscript_driver import PyScriptDriver
-from .drivers.linux_driver import LinuxDriver
 
 MAX_QUEUED_WRITES: int = 30
 
