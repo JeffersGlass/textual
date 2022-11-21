@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Textual PyScript Demo</title>
+    <link rel="stylesheet" href="https://pyscript.net/unstable/pyscript.css">
+    <script defer src="https://pyscript.net/unstable/pyscript.js"></script>
+</head>
+<body>
+    <py-config>
+        packages = ["../dist/textual-0.5.0-py3-none-any.whl", "httpx"]
+        [[fetch]]
+        files = ['termios.py', 'pridePyscript.py',]
+    </py-config>
+    <div id="output" style="background-color: #555; width:fit-content; height: fit-content;"></div>
+    <py-script>
+        from js import document
+        from pridePyscript import PrideApp
+        
+        PrideApp().run()
+        print("'pride.py' running in the browser")
+        print("PrideApp(PyScriptApp).run()")
+        
+    </py-script>
+    <style>
+        .py-terminal {
+            overflow-wrap: break-word;
+            padding: 1em;
+        }
+    </style>
+    <py-terminal id="term"></py-terminal>
+    
+</body>
+</html>
