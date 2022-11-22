@@ -1,5 +1,6 @@
 import asyncio
-from queue import Queue
+from collections import deque
+from io import TextIOBase
 import sys
 from typing import (
     Iterable
@@ -18,41 +19,22 @@ from .app import (
 from .drivers.pyscript_driver import PyScriptDriver
 from .screen import Screen
 
-
 rich.console._is_jupyter = lambda : True
 rich.console.JUPYTER_DEFAULT_COLUMNS = 80
 rich.console.JUPYTER_DEFAULT_LINES = 40
 
-def display_pyscript(segments: Iterable[Segment], text: str) -> None:
-    """Allow output of raw HTML within pyscript/pyodide"""
-    html = rich.jupyter._render_segments(segments)
-    import js
-    js.document.getElementById("output").innerHTML = html
-    
-    #sys.__stdout__.write(html)
-    #_pyscript_display("HELLO!", target="output")
-    #display(html, target="output")
-    
-
-#patch jupyter display method to write processed HTML to stdout
-rich.jupyter.display = display_pyscript 
-
-from .app import (
-    App,
-    CSSPathType,
-    ReturnType
-)
-
-from .drivers.pyscript_driver import PyScriptDriver
-
-MAX_QUEUED_WRITES: int = 30
-
-class _WriterCoroutine():
+def make_display_function(dom_target):
+    def display_pyscript(segments: Iterable[Segment], text: str) -> None:
+        """Allow output of raw HTML within pyscript/pyodide"""
+        html = rich.jupyter._render_segments(segments)
+        dom_target.innerHTML = html       
+    return display_pyscript
+class _DOMWriter(TextIOBase):
     """A coroutine-runner / file-like to do writes to stdout in the background."""
 
-    def __init__(self) -> None:
-        self._queue: Queue[str | None] = Queue(MAX_QUEUED_WRITES)
-        self._file = sys.__stdout__
+    def __init__(self, dom_target) -> None:
+        self._queue: deque[str | None] = deque()
+        self.dom_target = dom_target
 
     def write(self, text: str) -> None:
         """Write text. Text will be enqueued for writing.
@@ -60,7 +42,9 @@ class _WriterCoroutine():
         Args:
             text (str): Text to write to the file.
         """
-        self._queue.put(text)
+        sys.__stdout__.write("Writing to DOM")
+        sys.__stdout__.flush()
+        self._queue.append(text)
 
     def isatty(self) -> bool:
         """Pretend to be a terminal.
@@ -80,59 +64,30 @@ class _WriterCoroutine():
 
     def flush(self) -> None:
         """Flush the file (a no-op, because flush is done in the thread)."""
-        return
-
-    def start(self) -> None:
-        self.run()
-
-    def run(self) -> None:
-        """Run the thread."""
-        write = self._file.write
-        flush = self._file.flush
-        get = self._queue.get
-        qsize = self._queue.qsize
-        # Read from the queue, write to the file.
-        # Flush when there is a break.
-        async def coro():
-            while True:
-                text: str | None = get()
-                empty = qsize() == 0
-                if text is None:
-                    break
-                write(text)
-                if empty:
-                    flush()
-                await asyncio.sleep(1)
-        asyncio.ensure_future(coro())
-
-    def stop(self) -> None:
-        """Stop the thread, and block until it finished."""
-        self._queue.put(None)
-        if self._task: self._task.cancel()
-
+        self.dom_target.innerHTML = "".join(self._queue)
+        self._queue.clear()
 class PyScriptApp(App):
     def __init__(
         self,
+        dom_target,
         css_path: CSSPathType = None,
         watch_css: bool = False,
     ):
-        
+        self.dom_target = dom_target
 
         real_stdout = sys.__stdout__
         sys.__stdout__ = None
         super().__init__(PyScriptDriver, css_path, watch_css)
-        #super().__init__(LinuxDriver, css_path, watch_css)
         sys.__stdout__ = real_stdout
 
         #TODO: figure out writing in coroutine
-        #self._writer_coro = _WriterCoroutine()
-        #self._writer_coro.start()
-        #self.console.file = self._writer_coro
+        #self.console.file = _DOMWriter(self.dom_target)
 
-        self.console.file = sys.__stdout__
+        self.console.file = None 
+        self.console.width = 80
+        self.console.height = 40
 
-        #TODO figure out HTML
-        #self.console.is_jupyter = True
+        rich.jupyter.display = make_display_function(dom_target = self.dom_target)
 
     def run(
         self,

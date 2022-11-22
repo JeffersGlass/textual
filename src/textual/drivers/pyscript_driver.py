@@ -1,10 +1,11 @@
 import asyncio
 
+from rich.console import Console
+
 from ..driver import Driver
 from .browser_event_monitor import BrowserEventMonitor
 from ..geometry import Size
 from ..events import Event, Resize
-
 
 
 class PyScriptDriver(Driver):
@@ -20,6 +21,7 @@ class PyScriptDriver(Driver):
     ) -> None:
         super().__init__(console, target, debug=debug, size=size)
         self._target = target
+        self.console: Console = console
 
         #self.exit_event = Event()
         #self._event_thread: Thread | None = None        
@@ -27,7 +29,7 @@ class PyScriptDriver(Driver):
     def start_application_mode(self) -> None:
         self._event_monitor = BrowserEventMonitor(self.process_event, self._target)
 
-        size = Size(width = 80, height = 20)
+        size = Size(width = self.console.width, height = self.console.height)
         event = Resize(self._target, size, size)
         asyncio.ensure_future(self._target.post_message(event), loop=asyncio.get_running_loop())
 
