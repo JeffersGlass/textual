@@ -42,7 +42,9 @@ class PyScriptDriver(Driver):
         print("Stopping application mode")
 
     @classmethod
-    def setRestricted(cls, restricted: Sequence):
+    def setRestricted(cls, restricted: Sequence = None):
+        if not restricted:
+            return
         import js
         for key in restricted:
             if code_list := [code for code, combo in RESTRICTED_KEYCODES.items() if combo.key == key]:

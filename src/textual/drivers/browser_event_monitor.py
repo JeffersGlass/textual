@@ -3,7 +3,7 @@ from functools import partial
 import sys
 
 from ..events import Key
-from ..browser_keys import BROWSER_CHARCODES
+from ..browser_keys import BROWSER_CHARCODES, BROWSER_KEYCODES
 
 if 'pyodide' not in sys.modules:
     raise OSError('You must be running in a browser to use browserEventMonitor')
@@ -15,7 +15,7 @@ class BrowserEventMonitor():
     And passes them to the event loop"""
 
     LOCAL_EVENTS = {
-        #'click': '_click'
+        'click': '_click'
     }
 
     GLOBAL_EVENTS = {
@@ -32,6 +32,7 @@ class BrowserEventMonitor():
         self.process_event = process_event
         self.target = target
         self.restricted_keycombos = restricted_keycombos
+        self.capture_global_keys = True #TODO Add a way to disable this
 
         for evt in self.LOCAL_EVENTS:
             #print(f"Adding event trigger {evt}  with function name {self.LOCAL_EVENTS[evt]}")
@@ -41,7 +42,11 @@ class BrowserEventMonitor():
             #print(f"Adding event trigger {evt}  with function name {self.GLOBAL_EVENTS[evt]}")
             add_event_listener(js.document, evt, getattr(self, self.GLOBAL_EVENTS[evt]))
 
-        def capture_global_keys(evt):
+        js.document.onkeydown = self._global_key_handler
+        #for key in captured_restricted_keys:
+
+    def _global_key_handler(self,evt):
+        if self.capture_global_keys:
             if evt.keyCode in self.restricted_keycombos:
                 evt.preventDefault()
                 evt.stopPropagation()
@@ -49,12 +54,13 @@ class BrowserEventMonitor():
                 key, char = self.restricted_keycombos[evt.keyCode]
                 event = Key(self.target, key, char)
                 self.process_event(event)
+        
+        #Uncomment to log any keys
+        #import js
+        #js.console.log(evt)
 
-            #js.console.log(evt)
-
-
-        js.document.onkeydown = capture_global_keys
-        #for key in captured_restricted_keys:
+    def set_global_capture(self, capture: bool):
+        self.capture_global_keys = capture
 
     def _click(self, evt):
         import js
@@ -68,6 +74,8 @@ class BrowserEventMonitor():
 
         if evt.charCode in BROWSER_CHARCODES:
             key, char = BROWSER_CHARCODES[evt.charCode]
+        elif evt.keyCode in BROWSER_KEYCODES:
+            key, char = BROWSER_KEYCODES[evt.keyCode]
         else:
             key, char = evt.key, evt.key
 

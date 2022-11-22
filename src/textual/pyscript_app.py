@@ -70,17 +70,17 @@ class PyScriptApp(App):
     def __init__(
         self,
         dom_target,
-        captured_restricted_keys = None,
+        restricted = None,
         css_path: CSSPathType = None,
         watch_css: bool = False,
     ):
         self.dom_target = dom_target
-        self.captured_restricted_keys = captured_restricted_keys
+        self.captured_restricted_keys = restricted
 
         real_stdout = sys.__stdout__
         sys.__stdout__ = None
 
-        PyScriptDriver.setRestricted(captured_restricted_keys)
+        PyScriptDriver.setRestricted(restricted)
         super().__init__(PyScriptDriver, css_path, watch_css)
         
         sys.__stdout__ = real_stdout
