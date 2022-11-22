@@ -118,3 +118,7 @@ class PyScriptApp(App):
 
         asyncio.create_task(run_app())
         return self.return_value
+
+    def _display(self, screen: Screen, renderable: RenderableType | None) -> None:
+        super()._display(screen, renderable)
+        self.refresh()
