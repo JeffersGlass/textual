@@ -20,7 +20,7 @@ def display_pyscript(segments: Iterable[Segment], text: str) -> None:
     html = rich.jupyter._render_segments(segments)
     import js
     js.document.getElementById("output").innerHTML = html
-
+    
     #sys.__stdout__.write(html)
     #_pyscript_display("HELLO!", target="output")
     #display(html, target="output")
@@ -155,19 +155,3 @@ class PyScriptApp(App):
 
         asyncio.create_task(run_app())
         return self.return_value
-
-# Per pyodide docs, determine if we're running inside pyodide at Runtime
-#def is_pyodide() -> bool:
-#    return "pyodide" in sys.modules
-
-#rich.console._is_jupyter = is_pyodide
-
-""" def display_pyscript(segments: Iterable[Segment], text: str) -> None:
-    #Allow output of raw HTML within pyscript/pyodide
-    html = rich.jupyter._render_segments(segments)
-    print(html)
-    import js
-    js.console.log("About to write")
-    display(HTML(html), target="output") """
-
-#rich.jupyter.display = display_pyscript
