@@ -81,6 +81,7 @@ class PyScriptApp(App):
         sys.__stdout__ = None
 
         PyScriptDriver.setRestricted(restricted)
+        PyScriptDriver.dom_target = self.dom_target
         super().__init__(PyScriptDriver, css_path, watch_css)
         
         sys.__stdout__ = real_stdout

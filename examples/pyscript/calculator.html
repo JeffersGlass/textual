@@ -22,7 +22,7 @@
         from calculator import CalculatorApp
         
         target = document.getElementById("output")
-        CalculatorApp(target, captured_restricted_keys=["tab", "fart"]).run()
+        CalculatorApp(target, restricted=["tab", "fart"]).run()
     </py-script>
     <style>
         .py-terminal {

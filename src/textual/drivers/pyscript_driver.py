@@ -12,6 +12,7 @@ from ..browser_keys import RESTRICTED_KEYCODES
 class PyScriptDriver(Driver):
     """Powers display and input in PyScript"""
     captured_restricted_keys: list = {}
+    dom_target = None
 
     def __init__(
         self,
@@ -20,6 +21,7 @@ class PyScriptDriver(Driver):
         *,
         debug: bool = False,
         size: tuple[int, int] | None = None,
+        
     ) -> None:
         super().__init__(console, target, debug=debug, size=size)
         self._target = target
@@ -29,7 +31,7 @@ class PyScriptDriver(Driver):
         #self._event_thread: Thread | None = None        
 
     def start_application_mode(self) -> None:
-        self._event_monitor = BrowserEventMonitor(self.process_event, self._target, self.captured_restricted_keys)
+        self._event_monitor = BrowserEventMonitor(self.process_event, self._target, self.captured_restricted_keys, dom_target=self.dom_target)
 
         size = Size(width = self.console.width, height = self.console.height)
         event = Resize(self._target, size, size)

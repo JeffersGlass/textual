@@ -2,7 +2,7 @@ import asyncio
 from functools import partial
 import sys
 
-from ..events import Key
+from ..events import Key, MouseDown, MouseUp
 from ..browser_keys import BROWSER_CHARCODES, BROWSER_KEYCODES
 
 if 'pyodide' not in sys.modules:
@@ -14,15 +14,17 @@ class BrowserEventMonitor():
     """Captures events from an HTML DOM element
     And passes them to the event loop"""
 
-    LOCAL_EVENTS = {
-        'click': '_click'
+    MOUSE_EVENTS = {
+        'click': '_click',
+        'mousedown': '_mousedown',
+        'mouseup': '_mouseup'
     }
 
     GLOBAL_EVENTS = {
         'keypress': '_keypress'
     }
 
-    def __init__(self, process_event, target, restricted_keycombos):
+    def __init__(self, process_event, target, restricted_keycombos, dom_target=None):
         import js
         from pyodide.ffi import to_js
         from pyodide.ffi.wrappers import add_event_listener
@@ -33,10 +35,18 @@ class BrowserEventMonitor():
         self.target = target
         self.restricted_keycombos = restricted_keycombos
         self.capture_global_keys = True #TODO Add a way to disable this
+        self.dom_target = dom_target
 
-        for evt in self.LOCAL_EVENTS:
-            #print(f"Adding event trigger {evt}  with function name {self.LOCAL_EVENTS[evt]}")
-            add_event_listener(self.dom_target, evt, getattr(self, self.LOCAL_EVENTS[evt]))
+        for evt in self.MOUSE_EVENTS:
+            #print(f"Adding event trigger {evt}  with function name {self.MOUSE_EVENTS[evt]} to {self.dom_target}")
+            from pyodide.ffi import create_proxy
+            from js import document
+            dom_target.parentElement.addEventListener(evt, create_proxy(getattr(self, self.MOUSE_EVENTS[evt])), True)
+            #add_event_listener(self.dom_target.parentElement, evt, getattr(self, self.MOUSE_EVENTS[evt]))
+
+        def logit(s):
+            js.console.log(s)
+        add_event_listener(js.document, 'click', logit)
 
         for evt in self.GLOBAL_EVENTS:
             #print(f"Adding event trigger {evt}  with function name {self.GLOBAL_EVENTS[evt]}")
@@ -64,7 +74,41 @@ class BrowserEventMonitor():
 
     def _click(self, evt):
         import js
-        js.console.log(f"Click {evt}")
+        js.console.log(evt)
+
+    def _mousedown(self, evt):
+        import js
+        js.console.log(evt)
+
+        event = MouseDown(
+            sender = self.target,
+            x = 0,
+            y = 0,
+            delta_x = 0,
+            delta_y = 0,
+            button = evt.button,
+            shift = evt.shiftKey,
+            meta = evt.metaKey,
+            ctrl = evt.ctrlKey,
+        )
+        self.process_event(event)
+
+    def _mouseup(self, evt):
+        import js
+        js.console.log(evt)
+
+        event = MouseUp(
+            sender = self.target,
+            x = 0,
+            y = 0,
+            delta_x = 0,
+            delta_y = 0,
+            button = evt.button,
+            shift = evt.shiftKey,
+            meta = evt.metaKey,
+            ctrl = evt.ctrlKey,
+        )
+        self.process_event(event)
 
     def _keypress(self, evt):
         message = f"_keypress: Key({self.target=}, {evt.key=}, {evt.charCode=})"
