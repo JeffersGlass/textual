@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Textual PyScript Demo</title>
+    <link rel="stylesheet" href="https://pyscript.net/unstable/pyscript.css">
+    <script defer src="https://pyscript.net/unstable/pyscript.js"></script>
+</head>
+<body>
+    <py-config>
+        packages = ["../../dist/textual-0.5.0-py3-none-any.whl"]
+        [[fetch]]
+        files = ['calculator.py', 'calculator.css']
+    </py-config>
+    <div style="background-color: #353; width:fit-content; height: fit-content;">
+        <pre id="output"></pre>
+    </div>
+    <py-script>
+        from js import document
+        from calculator import CalculatorApp
+        
+        target = document.getElementById("output")
+        CalculatorApp(target, captured_restricted_keys=["tab", "fart"]).run()
+    </py-script>
+    <style>
+        .py-terminal {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            padding: 1em;
+        }
+    </style>
+    <py-terminal id="term"></py-terminal>
+    
+</body>
+</html>

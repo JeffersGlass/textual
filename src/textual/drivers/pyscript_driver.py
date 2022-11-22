@@ -1,4 +1,5 @@
 import asyncio
+from typing import Sequence
 
 from rich.console import Console
 
@@ -7,9 +8,10 @@ from .browser_event_monitor import BrowserEventMonitor
 from ..geometry import Size
 from ..events import Event, Resize
 
-
+from ..browser_keys import RESTRICTED_KEYCODES
 class PyScriptDriver(Driver):
     """Powers display and input in PyScript"""
+    captured_restricted_keys: list = {}
 
     def __init__(
         self,
@@ -27,7 +29,7 @@ class PyScriptDriver(Driver):
         #self._event_thread: Thread | None = None        
 
     def start_application_mode(self) -> None:
-        self._event_monitor = BrowserEventMonitor(self.process_event, self._target)
+        self._event_monitor = BrowserEventMonitor(self.process_event, self._target, self.captured_restricted_keys)
 
         size = Size(width = self.console.width, height = self.console.height)
         event = Resize(self._target, size, size)
@@ -38,3 +40,14 @@ class PyScriptDriver(Driver):
 
     def stop_application_mode(self) -> None:
         print("Stopping application mode")
+
+    @classmethod
+    def setRestricted(cls, restricted: Sequence):
+        import js
+        for key in restricted:
+            if code_list := [code for code, combo in RESTRICTED_KEYCODES.items() if combo.key == key]:
+                code = code_list[0]
+                js.console.warn(f"Restricting {key}")
+                cls.captured_restricted_keys[code] = RESTRICTED_KEYCODES[code]
+            else:
+                js.console.warn(f"{key} is not a restricted keycode")
