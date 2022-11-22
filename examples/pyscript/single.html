@@ -10,22 +10,23 @@
 </head>
 <body>
     <py-config>
-        packages = ["../dist/textual-0.5.0-py3-none-any.whl", "httpx"]
+        packages = ["../../dist/textual-0.5.0-py3-none-any.whl"]
         [[fetch]]
-        files = ['termios.py', 'pridePyscript.py',]
+        files = ['single.py',]
     </py-config>
-    <div id="output" style="background-color: #555; width:fit-content; height: fit-content;"></div>
+    <div style="background-color: #353; width:fit-content; height: fit-content;">
+        <pre id="output" style=""></pre>
+    </div>
     <py-script>
         from js import document
-        from pridePyscript import PrideApp
+        from single import SingleApp  
         
-        PrideApp().run()
-        print("'pride.py' running in the browser")
-        print("PrideApp(PyScriptApp).run()")
-        
+        target = document.getElementById("output")
+        SingleApp(target).run()
     </py-script>
     <style>
         .py-terminal {
+            word-wrap: break-word;
             overflow-wrap: break-word;
             padding: 1em;
         }
