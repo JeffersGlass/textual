@@ -81,7 +81,6 @@ class BrowserEventMonitor():
         js.console.log(evt)
 
         event = MouseDown(
-            sender = self.target,
             x = 0,
             y = 0,
             delta_x = 0,
@@ -98,7 +97,6 @@ class BrowserEventMonitor():
         js.console.log(evt)
 
         event = MouseUp(
-            sender = self.target,
             x = 0,
             y = 0,
             delta_x = 0,
@@ -123,6 +121,7 @@ class BrowserEventMonitor():
         else:
             key, char = evt.key, evt.key
 
-        event = Key(self.target, key, char)
+        #event = Key(self.target, key, char)
+        event = Key(key, char)
         self.process_event(event)
 

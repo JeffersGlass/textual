@@ -5,12 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Textual PyScript Demo</title>
-    <link rel="stylesheet" href="https://pyscript.net/unstable/pyscript.css">
-    <script defer src="https://pyscript.net/unstable/pyscript.js"></script>
+    <link rel="stylesheet" href="./build/pyscript.css">
+    <script defer src="./build/pyscript.js"></script>
 </head>
 <body>
+    <py-terminal></py-terminal>
     <py-config>
-        packages = ["../../dist/textual-0.5.0-py3-none-any.whl"]
+        packages = ["../../dist/textual-0.24.1-py3-none-any.whl"]
+        xterm = 'xterm'
         [[fetch]]
         files = ['calculator.py', 'calculator.css']
     </py-config>
@@ -21,8 +23,8 @@
         from js import document
         from calculator import CalculatorApp
         
-        target = document.getElementById("output")
-        CalculatorApp(target, restricted=["tab", "fart"]).run()
+        target = document.querySelector("py-terminal")
+        CalculatorApp(target, restricted=["tab"]).run(size=(80, 120))
     </py-script>
     <style>
         .py-terminal {
@@ -31,7 +33,6 @@
             padding: 1em;
         }
     </style>
-    <py-terminal id="term"></py-terminal>
     
 </body>
 </html>

@@ -145,6 +145,3 @@ class CalculatorApp(PyScriptApp):
                 self.right = Decimal(self.value)
             do_math()
 
-
-if __name__ == "__main__":
-    CalculatorApp().run()
