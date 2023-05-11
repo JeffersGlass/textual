@@ -62,7 +62,7 @@ class BrowserEventMonitor():
                 evt.stopPropagation()
 
                 key, char = self.restricted_keycombos[evt.keyCode]
-                event = Key(self.target, key, char)
+                event = Key(key, char)
                 self.process_event(event)
         
         #Uncomment to log any keys
