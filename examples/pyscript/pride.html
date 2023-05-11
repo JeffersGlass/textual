@@ -5,12 +5,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Textual PyScript Demo</title>
-    <link rel="stylesheet" href="https://pyscript.net/unstable/pyscript.css">
-    <script defer src="https://pyscript.net/unstable/pyscript.js"></script>
+    <link rel="stylesheet" href="./build/pyscript.css">
+    <script defer src="./build/pyscript.js"></script>
 </head>
 <body>
     <py-config>
-        packages = ["../../dist/textual-0.5.0-py3-none-any.whl", "httpx"]
+        packages = ["../../dist/textual-0.24.1-py3-none-any.whl", "httpx"]
+        xterm = true
         [[fetch]]
         files = ['pride.py',]
     </py-config>
@@ -21,7 +22,7 @@
         from js import document
         from pride import PrideApp
         
-        PrideApp(document.getElementById("output")).run()
+        PrideApp(document.querySelector('py-terminal')).run()
         print("'pride.py' running in the browser")
         print("PrideApp(PyScriptApp).run()")
         
