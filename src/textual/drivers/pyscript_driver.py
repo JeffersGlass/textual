@@ -32,6 +32,7 @@ class PyScriptDriver(Driver):
         #self._event_thread: Thread | None = None        
 
     def start_application_mode(self) -> None:
+        print("Starting application mode")
         self._event_monitor = BrowserEventMonitor(self.process_event, self._target, self.captured_restricted_keys, dom_target=self.dom_target)
 
         size = Size(width = self._app.console.width, height = self._app.console.height)
@@ -48,6 +49,8 @@ class PyScriptDriver(Driver):
 
     def stop_application_mode(self) -> None:
         print("Stopping application mode")
+        import traceback
+        traceback.print_stack(limit=10)
 
     @classmethod
     def setRestricted(cls, restricted: Sequence = None):

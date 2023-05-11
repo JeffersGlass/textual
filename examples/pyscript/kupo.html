@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Textual PyScript Demo</title>
+    <link rel="stylesheet" href="./build/pyscript.css">
+    <script defer src="./build/pyscript.js"></script>
+</head>
+<body>
+    <py-config>
+        packages = ["../../dist/textual-0.24.1-py3-none-any.whl", "aiofiles"]
+        xterm = true
+        [[fetch]]
+        files = ['__init__.py', '_argparse.py', '_command_line.py', '_directory_search.py', '_directory.py', '_file_info_bar.py', '_files.py', '_header.py', '_preview.py', 'kupo.css', 'kupo_commands.md', 'new_app.py',]
+        from = 'kupo'
+        to_folder = 'kupo'
+    </py-config>
+    <div style="background-color: #353; width:fit-content; height: fit-content;">
+        <pre id="output" ></pre>
+    </div>
+    <py-script>
+        from js import document
+        from kupo.new_app import Kupo
+        
+        Kupo(document.querySelector('py-terminal'), restricted=['up', 'down', 'left', 'right']).run()        
+    </py-script>
+    <py-terminal id="term"></py-terminal>
+    
+</body>
+</html>

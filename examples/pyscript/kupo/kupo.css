@@ -1,0 +1,220 @@
+$scrollbar-color: $accent-darken-3;
+
+Screen {
+    background: $background;
+}
+
+.dir-list {
+    background: $background;
+}
+
+#current-dir {
+    height: auto;
+    padding-left: 1;
+}
+
+#current-dir:focus {
+    tint: $accent 7%;
+    border-left: wide $accent;
+    padding-left: 0;
+}
+
+#current-dir-wrapper {
+    layout: vertical;
+    width: 3fr;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-size-vertical: 1;
+    scrollbar-color: $scrollbar-color;
+}
+
+#current-dir-filter-warning {
+    dock: bottom;
+    display: none;
+    height: auto;
+    color: $text;
+    background: $error-darken-2;
+}
+
+#directory-search {
+    dock: bottom;
+    height: 1;
+    display: none;
+}
+
+#directory-search-input {
+    height: 1;
+    border: none;
+    padding: 0 1;
+}
+
+#directory-search-input:focus {
+    padding-left: 0;
+    border-left: wide $accent;
+    tint: $accent 5%;
+}
+
+#parent-dir {
+    padding-left: 1;
+    width: 2fr;
+}
+
+.directory--dir {
+    color: $accent-lighten-1;
+}
+
+.directory--highlighted {
+    text-style: bold;
+    color: $text;
+    background: $accent;
+}
+
+.directory--highlighted-dir {
+    text-style: bold;
+    color: $text;
+    background: $accent;
+}
+
+#parent-dir > .directory--highlighted-dir {
+    text-style: bold;
+    color: $text;
+    background: $accent;
+}
+
+.directory--meta-column {
+    color: $text 50%;
+    background: $boost 4%;
+}
+
+.directory--highlighted-meta-column {
+    background: $accent-darken-2;
+}
+
+#parent-dir .directory--highlighted-meta-column {
+    background: $accent-darken-2;
+}
+
+#preview-wrapper {
+    width: 5fr;
+    scrollbar-gutter: stable;
+    scrollbar-size-vertical: 1;
+    scrollbar-color: $scrollbar-color;
+}
+
+Preview {
+    height: auto;
+    width: auto;
+    padding-left: 1;
+}
+
+Preview:focus {
+    tint: $accent 5%;
+    border-left: wide $accent;
+    padding-left: 0;
+}
+
+Preview > .preview--body {
+    background: $background;
+}
+
+Header {
+    layout: horizontal;
+    dock: top;
+    width: 100%;
+    height: 1;
+    color: $text;
+    background: $boost 6%;
+    padding: 0 1;
+}
+
+#header-current-path {
+    dock: right;
+    width: auto;
+}
+
+#header-user {
+    width: auto;
+    color: $text 60%;
+}
+
+#header-host {
+    width: auto;
+    color: $text 60%;
+}
+
+#file-info-bar {
+    dock: bottom;
+    padding: 0 1;
+    margin-bottom: 1;
+    background: $accent-darken-3;
+    color: $text;
+    height: 1;
+}
+
+CurrentFileInfoBar {
+    width: auto;
+}
+
+DiskUsageBar {
+    width: auto;
+    dock: right;
+    text-align: right;
+}
+
+#command-line {
+    dock: bottom;
+    height: 1;
+    margin-bottom: 2;
+    background: $panel;
+}
+
+#command-line-input {
+    height: 1;
+    border: none;
+    width: 100%;
+    padding: 0;
+    background: $panel;
+}
+
+#command-line-prompt {
+    width: 5;
+    dock: left;
+}
+
+.active-prompt {
+    color: $success-darken-1;
+}
+
+#command-reference {
+    dock: bottom;
+    display: none;
+    height: 1;
+    padding: 0 1;
+    margin-bottom: 3;
+    background: $success;
+    color: #1f1f1f;
+}
+
+.directory--chosen-path {
+    color: $text;
+    background: $success 50%;
+}
+
+.directory--chosen-path-meta {
+    background: $success-darken-1 50%;
+}
+
+.directory--chosen-path-selected {
+    background: $success-lighten-1;
+}
+
+.directory--chosen-path-selected-meta {
+    background: $success;
+}
+
+#selection-info {
+    dock: right;
+    background: $success;
+    color: $text;
+    width: auto;
+}

@@ -706,7 +706,6 @@ class App(Generic[ReturnType], DOMNode):
             width, height = self._driver._size
         else:
             width, height = self.console.size
-        print(f"{width=} {height=}")
         return Size(width, height)
 
     @property
@@ -1769,7 +1768,10 @@ class App(Generic[ReturnType], DOMNode):
                                     await run_process_messages()
 
                 finally:
-                    driver.stop_application_mode()
+                    print("Would stop application mode here???")
+                    #driver.stop_application_mode()
+            else:
+                print("Yes self._exit")
         except Exception as error:
             self._handle_exception(error)
 
