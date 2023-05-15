@@ -1,13 +1,32 @@
 from textual.screen import Screen
-from textual.widgets import DirectoryTree,Static
+from textual.widgets import DirectoryTree, TextLog, Placeholder
+from textual.app import App
+from textual.containers import Horizontal
 
-from textual.pyscript_app import PyScriptApp
+import sys
+IN_BROWSER = 'pyodide' in sys.modules
+if IN_BROWSER: from textual.pyscript_app import PyScriptApp
 
 class Home(Screen):
-    def compose(self):
-        yield DirectoryTree("/")
+    d = DirectoryTree('/')
+    t = TextLog(highlight=True)
 
-class Embrowsen(PyScriptApp):
+    def compose(self):
+        yield self.d
+        #yield Placeholder(variant="text")
+        yield self.t
+
+    def on_mount(self):
+        self.set_focus(self.t)
+        
+    def on_directory_tree_file_selected( self, event: DirectoryTree.FileSelected ) -> None:
+        with open(event.path, 'r') as f:
+            self.t.clear()
+            self.t.write(f.read())
+
+super_class = PyScriptApp if IN_BROWSER else App
+
+class Embrowsen(super_class):
     CSS_PATH = "embrowsen.css"
     SCREENS = {
         "home": Home,
@@ -16,3 +35,10 @@ class Embrowsen(PyScriptApp):
 
     def on_mount(self) -> None:
         self.push_screen("home")
+        
+
+if not IN_BROWSER:
+
+    if __name__ == "__main__":
+        app = Embrowsen()
+        app.run()

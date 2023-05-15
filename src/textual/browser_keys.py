@@ -20,6 +20,7 @@ BROWSER_CHARCODES = {
 
 
 BROWSER_KEYCODES = {
+    13: KeyCombo(key="enter", char="\r"),
 }
 
 RESTRICTED_KEYCODES = {

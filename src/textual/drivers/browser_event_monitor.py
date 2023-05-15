@@ -66,8 +66,8 @@ class BrowserEventMonitor():
                 self.process_event(event)
         
         #Uncomment to log any keys
-        #import js
-        #js.console.log(evt)
+        import js
+        js.console.log(evt)
 
     def set_global_capture(self, capture: bool):
         self.capture_global_keys = capture
@@ -111,7 +111,7 @@ class BrowserEventMonitor():
     def _keypress(self, evt):
         message = f"_keypress: Key({self.target=}, {evt.key=}, {evt.charCode=})"
         import js
-        js.console.log(message)
+        js.console.log("_keypress message: ", message)
         #js.console.log(evt)
 
         if evt.charCode in BROWSER_CHARCODES:

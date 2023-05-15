@@ -1,0 +1,16 @@
+Screen {
+    layout: grid;
+    grid-size: 1 2;
+}
+
+DirectoryTree {
+    width: 1fr;  
+}
+
+TextLog {
+    width: 1fr;
+}
+
+PlaceHolder {
+    width: 1fr;
+}
