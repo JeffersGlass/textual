@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Textual PyScript Demo</title>
+    <link rel="stylesheet" href="./build/pyscript.css">
+    <script defer src="./build/pyscript.js"></script>
+</head>
+<body>
+    <py-config>
+        packages = ["../../dist/textual-0.24.1-py3-none-any.whl", "aiofiles"]
+        xterm = true
+        [[fetch]]
+        files = ['__init__.py', 'embrowsen.css', 'embrowsen.py']
+        from = 'embrowsen'
+        to_folder = 'embrowsen'
+    </py-config>
+    <div style="background-color: #353; width:fit-content; height: fit-content;">
+        <pre id="output" ></pre>
+    </div>
+    <py-script src="emmain.py"> 
+    </py-script>
+    <py-terminal id="term"></py-terminal>
+    
+</body>
+</html>

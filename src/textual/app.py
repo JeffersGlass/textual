@@ -1768,10 +1768,7 @@ class App(Generic[ReturnType], DOMNode):
                                     await run_process_messages()
 
                 finally:
-                    print("Would stop application mode here???")
-                    #driver.stop_application_mode()
-            else:
-                print("Yes self._exit")
+                    driver.stop_application_mode()
         except Exception as error:
             self._handle_exception(error)
 
