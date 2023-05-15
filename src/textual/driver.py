@@ -20,7 +20,6 @@ class Driver(ABC):
         *,
         debug: bool = False,
         size: tuple[int, int] | None = None,
-        **kwargs
     ) -> None:
         """Initialize a driver.
 
