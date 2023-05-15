@@ -2,6 +2,7 @@ from textual.screen import Screen
 from textual.widgets import DirectoryTree, TextLog, Placeholder
 from textual.app import App
 from textual.containers import Horizontal
+from textual.binding import Binding
 
 import sys
 IN_BROWSER = 'pyodide' in sys.modules
@@ -20,9 +21,13 @@ class Home(Screen):
         self.set_focus(self.t)
         
     def on_directory_tree_file_selected( self, event: DirectoryTree.FileSelected ) -> None:
-        with open(event.path, 'r') as f:
+        try:
+            with open(event.path, 'r') as f:
+                self.t.clear()
+                self.t.write(f.read())
+        except UnicodeDecodeError as err:
             self.t.clear()
-            self.t.write(f.read())
+            self.t.write("Could not decode unicode from file")
 
 super_class = PyScriptApp if IN_BROWSER else App
 
@@ -31,7 +36,9 @@ class Embrowsen(super_class):
     SCREENS = {
         "home": Home,
     }
-    BINDINGS = []
+    BINDINGS = [
+        Binding( "space", "submit", "", show=False ),
+    ]
 
     def on_mount(self) -> None:
         self.push_screen("home")
