@@ -10,7 +10,7 @@ if IN_BROWSER: from textual.pyscript_app import PyScriptApp
 
 class Home(Screen):
     d = DirectoryTree('/')
-    t = TextLog(highlight=True)
+    t = TextLog(highlight=True, auto_scroll=False)
 
     def compose(self):
         yield self.d

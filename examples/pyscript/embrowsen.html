@@ -9,7 +9,8 @@
     <script defer src="./build/pyscript.js"></script>
 </head>
 <body>
-    <py-config>
+
+    
         packages = ["../../dist/textual-0.24.1-py3-none-any.whl", "aiofiles"]
         xterm = true
         [[fetch]]
@@ -20,6 +21,12 @@
     <div style="background-color: #353; width:fit-content; height: fit-content;">
         <pre id="output" ></pre>
     </div>
+    <py-script>
+        with open("my-file.txt", "w+") as f:
+            f.write("This is some output text\m")
+            f.write("Which should appear in\n")
+            f.write("The destination file\n")
+    </py-script>
     <py-script src="emmain.py"> 
     </py-script>
     <py-terminal id="term"></py-terminal>
