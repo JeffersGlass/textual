@@ -21,6 +21,10 @@ class Home(Screen):
         self.set_focus(self.t)
         
     def on_directory_tree_file_selected( self, event: DirectoryTree.FileSelected ) -> None:
+        import sys
+        if 'pyodide' in sys.modules:
+            import js
+            js.console.log("File selected")
         try:
             with open(event.path, 'r') as f:
                 self.t.clear()

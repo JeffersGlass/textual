@@ -5,7 +5,6 @@ KeyCombo = namedtuple("KeyCombo", ["key", "char"])
 
 # Maps charcodes from keypress to Terminal keys
 BROWSER_CHARCODES = {
-    13: KeyCombo(key="enter", char="\r"),
     32: KeyCombo(key="space", char=" "),
     42: KeyCombo(key="asterisk", char="*"),
     43: KeyCombo(key="plus", char="+"),
@@ -20,6 +19,7 @@ BROWSER_CHARCODES = {
 
 
 BROWSER_KEYCODES = {
+    13: KeyCombo(key="enter", char="\r"),
     37: KeyCombo(key="left", char=""),
     38: KeyCombo(key="up", char=""),
     39: KeyCombo(key="right", char=""),

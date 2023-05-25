@@ -47,6 +47,15 @@ class Driver(ABC):
         Args:
             event: An event.
         """
+        import sys
+        if 'pyodide' in sys.modules:
+            import js
+            from pyodide.ffi import to_js
+            js.console.log("Processing event")
+            js.console.log(str(event.__class__))
+            for key in dir(event):
+                js.console.log(f"{key}: {getattr(event, key)}")
+            js.console.log("----------")
         asyncio.run_coroutine_threadsafe(
             self._app._post_message(event), loop=self._loop
         )

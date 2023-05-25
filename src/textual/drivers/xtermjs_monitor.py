@@ -38,6 +38,8 @@ class XtermJSMonitor():
         import js
         domEvent = event_object.domEvent
         js.console.log(domEvent)
+        js.console.log("charCode", domEvent.charCode)
+        js.console.log("keyCode", domEvent.keyCode)
 
         if self.capture_global_keys:
             if domEvent.keyCode in self.restricted_keycombos:
@@ -45,13 +47,17 @@ class XtermJSMonitor():
                 domEvent.stopPropagation()
 
                 key, char = self.restricted_keycombos[domEvent.keyCode]
+
+                js.console.log(f"Handling restricted key {key} {char}")
                 event = Key(key, char)
                 self.process_event(event)
                 return
         
         if domEvent.charCode in BROWSER_CHARCODES:
+            js.console.log("Looked up new charcode in BROWSER_CHARCODES")
             key, char = BROWSER_CHARCODES[domEvent.charCode]
         elif domEvent.keyCode in BROWSER_KEYCODES:
+            js.console.log("Looked up new keyCode in BROWSER_KEYCODES")
             key, char = BROWSER_KEYCODES[domEvent.keyCode]
         else:
             key, char = domEvent.key, domEvent.key
@@ -70,43 +76,6 @@ class XtermJSMonitor():
         self.xterm = self.dom_target.xterm  
         self.xterm.onKey(create_proxy(self.dispatchKeyEvent))
     
-    """ def _(*args): #Formerly the event attach logic
-        import js
-        from pyodide.ffi import to_js
-        from pyodide.ffi.wrappers import add_event_listener
-        from pyodide.ffi import create_proxy
-
-        for evt in self.MOUSE_EVENTS:
-            #print(f"Adding event trigger {evt}  with function name {self.MOUSE_EVENTS[evt]} to {self.dom_target}")
-            from pyodide.ffi import create_proxy
-            self.dom_target.parentElement.addEventListener(evt, create_proxy(getattr(self, self.MOUSE_EVENTS[evt])), True)
-            #add_event_listener(self.dom_target.parentElement, evt, getattr(self, self.MOUSE_EVENTS[evt]))
-
-        def logit(s):
-            js.console.log(s)
-        add_event_listener(js.document, 'click', logit)
-
-        for evt in self.GLOBAL_EVENTS:
-            #print(f"Adding event trigger {evt}  with function name {self.GLOBAL_EVENTS[evt]}")
-            add_event_listener(js.document, evt, getattr(self, self.GLOBAL_EVENTS[evt]))
-
-        js.document.onkeydown = self._global_key_handler
-        #for key in captured_restricted_keys: """
-
-    def _global_key_handler(self,evt):
-        if self.capture_global_keys:
-            if evt.keyCode in self.restricted_keycombos:
-                evt.preventDefault()
-                evt.stopPropagation()
-
-                key, char = self.restricted_keycombos[evt.keyCode]
-                event = Key(key, char)
-                self.process_event(event)
-        
-        #Uncomment to log any keys
-        import js
-        js.console.log(evt)
-
     def set_global_capture(self, capture: bool):
         self.capture_global_keys = capture
 
