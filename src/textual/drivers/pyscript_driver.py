@@ -4,7 +4,7 @@ from typing import Sequence
 from rich.console import Console
 
 from ..driver import Driver
-from .browser_event_monitor import BrowserEventMonitor
+from .xtermjs_monitor import XtermJSMonitor
 from ..geometry import Size
 from ..events import Event, Resize
 
@@ -33,7 +33,7 @@ class PyScriptDriver(Driver):
 
     def start_application_mode(self) -> None:
         print("Starting application mode")
-        self._event_monitor = BrowserEventMonitor(self.process_event, self._target, self.captured_restricted_keys, dom_target=self.dom_target)
+        self._event_monitor = XtermJSMonitor(self.process_event, self._target, self.captured_restricted_keys, dom_target=self.dom_target)
 
         size = Size(width = self._app.console.width, height = self._app.console.height)
         event = Resize(size, size)

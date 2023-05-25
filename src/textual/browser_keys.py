@@ -20,7 +20,10 @@ BROWSER_CHARCODES = {
 
 
 BROWSER_KEYCODES = {
-    13: KeyCombo(key="enter", char="\r"),
+    37: KeyCombo(key="left", char=""),
+    38: KeyCombo(key="up", char=""),
+    39: KeyCombo(key="right", char=""),
+    40: KeyCombo(key="down", char=""),
 }
 
 RESTRICTED_KEYCODES = {
